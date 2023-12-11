@@ -1,7 +1,7 @@
 # einlesen ----
 library(dplyr)
 library(crayon)
-x <- readLines("A0C23/Aufgabe10.txt")
+x <- readLines("AoC23/Aufgabe10.txt")
 head(x)
 
 y <- lapply(x, function(xx) unlist(strsplit(xx, ""))) %>% Reduce("rbind", .)
@@ -111,7 +111,7 @@ print(z, quote = FALSE)
 p <- z[i]
 n <- start[1]
 orr <- start
-# orr <- c("links", "oben")
+orr <- c("links", "oben")
 norr <- setdiff(names(ind), orr)
 ind <- getInd()
 
@@ -142,11 +142,11 @@ while(any(i != ind0)) {
   # if(runif(1, 0, 1) > .9) print(xx, quote = FALSE)
   # print(orr)
   # Sys.sleep(.05)
-
+  
   #
   i <- i + dir[[n]]
 }
+table(z)
 
 print(z, quote = FALSE)
 print(y, quote = FALSE)
-
