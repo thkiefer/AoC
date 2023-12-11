@@ -1,7 +1,7 @@
 # einlesen ----
 library(dplyr)
 library(crayon)
-x <- readLines("A0C23/Aufgabe10.txt")
+x <- readLines("AoC23/Aufgabe10.txt")
 head(x)
 
 y <- lapply(x, function(xx) unlist(strsplit(xx, ""))) %>% Reduce("rbind", .)
