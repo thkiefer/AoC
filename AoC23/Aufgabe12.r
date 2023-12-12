@@ -42,7 +42,7 @@ if(FALSE){
 # b ----
 treffer <- numeric(length(x))
 
-for(ii in seq_along(x)){#ii <- 6
+for(ii in seq_along(x)){#ii <- 1
   
   tmp <- strsplit(x[[ii]], " ") %>% unlist()
   y <- strsplit(tmp[1], "") %>% unlist
@@ -115,8 +115,13 @@ for(ii in seq_along(x)){#ii <- 6
     if(length(nn2) < sum(yy2 != "")) {
       repl <- grep("^[?]+$", yy2)[1]
       if(!is.na(repl)) {
+        if(length(repl) > 1) repl <- repl[1]
+        yy20 <- yy2
         yy2[repl] <- ""
-        if(length(repl) == 1 & repl == length(yy2)) yy2 <- c(yy2, "")
+        rp <- rep(1, length(yy20))
+        rp[repl] <- nchar(yy20[repl])
+        yy2 <- rep(yy2, rp)
+        if(repl == length(yy20)) yy2 <- c(yy2, "")
       } else return(0)
     } 
     if(length(nn2) < sum(yy2 != "")) {
