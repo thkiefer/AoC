@@ -26,15 +26,53 @@ neigh <- function(y, pos2, dir2){
   neig.los
 }
 
-
 pos0 <- matrix(c(1, 1), ncol = 2, nrow = 1, dimnames = list(NULL, c("row", "col")))
-dir0 <- NULL
+dir0 <- "right"
+poss <- matrix(NA, ncol = 2, nrow = 10, dimnames = list(NULL, c("row", "col")))
+dirs <- character(10);
 
-rand_neig_path <- function(y, pos1, dir1) {
+incp <- pos0
+incd <- dir0
+ii <- 1
+while(any(incp[ii,] < dim(y))) {
+  ii <- ii + 1
+  
+  if(ii > nrow(incp)) {
+    incp <- rbind(incp, poss)
+    incd <- c(incd, dirs)
+  }
+  
+  incp[ii,] <- next_i(incp[ii-1,], incd[ii-1])
+  incd[ii] <- ifelse((ii - 1) %% 2 + 1 == 2, "down", "right")
+}
+
+incp <- incp[1:sum(incd != ""),]
+incd <- incd[1:(sum(incd != "") - 1)]
+ 
+sumdiag2 <- 2 * sum(diag(y)[-1])
+fit <- function(des) sum(y[des[[1]][-1,]]) / sumdiag2
+
+incf <- fit(incp)
+incf * sumdiag2
+
+probs <- y[incp]
+selec <- sample(1:(length(incd)-1), 1, prob = probs[-c(1, nrow(incp))])
+
+if(selec == 1) {
+  stop()
+}
+
+incd[selec-1]
+list("down" = list("right" = c("right", "down", "left"), "left" = c("left", "down", "right")),
+     "up" = list("right" = c("right", "up", "left"), "left" = c("left", "up", "right")),
+     "right" = list(c("up", "right", "down"), c("down", "right", "up")),
+     "left" = list(c("up", "left", "down"), c("down", "left", "up")))
+
+next_path <- function(y, incp, incd) {
   # pos1 <- pos0; dir1 <- dir0
   poss <- matrix(NA, ncol = 2, nrow = 10, dimnames = list(NULL, c("row", "col")))
   dirs <- character(10);
- 
+  
   i <- nrow(pos1)
   while(any(pos1[i,] < dim(y))) {
     i <- i + 1
@@ -48,9 +86,7 @@ rand_neig_path <- function(y, pos1, dir1) {
   list(pos1[1:i,,drop = FALSE], dir1[1:(i-1)])  
 }
 
-inc <- rand_neig_path(y, pos0, dir0)
-sumdiag2 <- 2 * sum(diag(y))
-fit <- function(des) sum(y[des[[1]]]) / sumdiag2
+
 fitinc <- fit(inc)
 best <- list(inc, fitinc)
 
